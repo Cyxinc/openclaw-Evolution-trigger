@@ -230,6 +230,12 @@ export class OpenClawApp extends LitElement {
   @state() dreamDiaryError: string | null = null;
   @state() dreamDiaryPath: string | null = null;
   @state() dreamDiaryContent: string | null = null;
+  // Evolution Trigger state
+  @state() evolutionTaskStatus: "idle" | "in-progress" | "complete" | "evolving" | "evolved" =
+    "idle";
+  @state() evolutionResults: Array<{ kind: string; detail: string }> = [];
+  @state() evolutionError: string | null = null;
+  _savedSessionKey?: string;
   @state() configFormDirty = false;
   @state() configFormMode: "form" | "raw" = "form";
   @state() configSearchQuery = "";

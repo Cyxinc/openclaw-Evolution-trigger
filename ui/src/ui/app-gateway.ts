@@ -23,6 +23,7 @@ import { loadAssistantIdentity } from "./controllers/assistant-identity.ts";
 import { loadChatHistory } from "./controllers/chat.ts";
 import { handleChatEvent, type ChatEventPayload } from "./controllers/chat.ts";
 import { loadDevices } from "./controllers/devices.ts";
+import { parseEvolutionResults, EVOLUTION_SESSION_KEY } from "./controllers/evolution.ts";
 import type { ExecApprovalRequest } from "./controllers/exec-approval.ts";
 import {
   addExecApproval,
@@ -358,6 +359,15 @@ function handleChatGatewayEvent(host: GatewayHost, payload: ChatEventPayload | u
   const historyReloaded = handleTerminalChatEvent(host, payload, state);
   if (state === "final" && !historyReloaded && shouldReloadHistoryForFinalEvent(payload)) {
     void loadChatHistory(host as unknown as OpenClawApp);
+  }
+  // After a final event on the evolution session while evolving, parse results
+  const app = host as unknown as OpenClawApp;
+  if (
+    state === "final" &&
+    payload?.sessionKey === EVOLUTION_SESSION_KEY &&
+    app.evolutionTaskStatus === "evolving"
+  ) {
+    parseEvolutionResults(app);
   }
 }
 

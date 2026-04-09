@@ -75,6 +75,12 @@ import {
   updateDreamingEnabled,
 } from "./controllers/dreaming.ts";
 import {
+  markEvolutionTaskComplete,
+  triggerEvolution,
+  resetEvolution,
+  sendEvolutionMessage,
+} from "./controllers/evolution.ts";
+import {
   loadExecApprovals,
   removeExecApprovalsFormValue,
   saveExecApprovals,
@@ -161,6 +167,26 @@ const lazyLogs = createLazy(() => import("./views/logs.ts"));
 const lazyNodes = createLazy(() => import("./views/nodes.ts"));
 const lazySessions = createLazy(() => import("./views/sessions.ts"));
 const lazySkills = createLazy(() => import("./views/skills.ts"));
+const lazyDreamingView = createLazy(() => import("./views/dreaming.ts"));
+const lazyEvolutionView = createLazy(() => import("./views/evolution.ts"));
+
+function resolveConfiguredDreaming(configValue: Record<string, unknown> | null): {
+  enabled: boolean;
+} {
+  if (!configValue) {
+    return {
+      enabled: false,
+    };
+  }
+  const plugins = configValue.plugins as Record<string, unknown> | undefined;
+  const entries = plugins?.entries as Record<string, unknown> | undefined;
+  const memoryCore = entries?.["memory-core"] as Record<string, unknown> | undefined;
+  const config = memoryCore?.config as Record<string, unknown> | undefined;
+  const dreaming = config?.dreaming as Record<string, unknown> | undefined;
+  return {
+    enabled: typeof dreaming?.enabled === "boolean" ? dreaming.enabled : false,
+  };
+}
 
 function formatDreamNextCycle(nextRunAtMs: number | undefined): string | null {
   if (typeof nextRunAtMs !== "number" || !Number.isFinite(nextRunAtMs)) {
@@ -2145,6 +2171,82 @@ export function renderApp(state: AppViewState) {
               onToggleEnabled: applyDreamingEnabled,
               onRequestUpdate: requestHostUpdate,
             })
+          : nothing}
+        ${state.tab === "evolution"
+          ? lazyRender(lazyEvolutionView, (m) =>
+              m.renderEvolution({
+                chatProps: {
+                  sessionKey: state.sessionKey,
+                  onSessionKeyChange: () => {},
+                  thinkingLevel: state.chatThinkingLevel,
+                  showThinking,
+                  showToolCalls,
+                  loading: state.chatLoading,
+                  sending: state.chatSending,
+                  compactionStatus: state.compactionStatus,
+                  fallbackStatus: state.fallbackStatus,
+                  assistantAvatarUrl: chatAvatarUrl,
+                  messages: state.chatMessages,
+                  toolMessages: state.chatToolMessages,
+                  streamSegments: state.chatStreamSegments,
+                  stream: state.chatStream,
+                  streamStartedAt: state.chatStreamStartedAt,
+                  draft: state.chatMessage,
+                  queue: state.chatQueue,
+                  connected: state.connected,
+                  canSend: state.connected,
+                  disabledReason: null,
+                  error: state.lastError,
+                  sessions: null,
+                  focusMode: false,
+                  onRefresh: () => {
+                    state.resetToolStream();
+                    return Promise.all([loadChatHistory(state), refreshChatAvatar(state)]);
+                  },
+                  onToggleFocusMode: () => {},
+                  onChatScroll: (event) => state.handleChatScroll(event),
+                  getDraft: () => state.chatMessage,
+                  onDraftChange: (next) => (state.chatMessage = next),
+                  onRequestUpdate: requestHostUpdate,
+                  attachments: state.chatAttachments,
+                  onAttachmentsChange: (next) => (state.chatAttachments = next),
+                  onSend: () => {
+                    const msg = state.chatMessage.trim();
+                    if (!msg) {
+                      return;
+                    }
+                    state.chatMessage = "";
+                    void sendEvolutionMessage(state, msg);
+                  },
+                  canAbort: Boolean(state.chatRunId),
+                  onAbort: () => void state.handleAbortChat(),
+                  onQueueRemove: (id) => state.removeQueuedMessage(id),
+                  onNewSession: () => {},
+                  agentsList: null,
+                  currentAgentId: "main",
+                  onAgentChange: () => {},
+                  assistantName: state.assistantName,
+                  assistantAvatar: state.assistantAvatar,
+                  basePath: state.basePath ?? "",
+                },
+                taskStatus: state.evolutionTaskStatus,
+                evolving: state.evolutionTaskStatus === "evolving",
+                evolutionResults: state.evolutionResults,
+                evolutionError: state.evolutionError,
+                onMarkComplete: () => {
+                  markEvolutionTaskComplete(state);
+                  requestHostUpdate?.();
+                },
+                onEvolve: () => void triggerEvolution(state),
+                onReset: () => {
+                  resetEvolution(state);
+                  state.chatMessages = [];
+                  state.chatStream = null;
+                  state.chatRunId = null;
+                  requestHostUpdate?.();
+                },
+              }),
+            )
           : nothing}
       </main>
       ${renderExecApprovalPrompt(state)} ${renderGatewayUrlConfirmation(state)} ${nothing}

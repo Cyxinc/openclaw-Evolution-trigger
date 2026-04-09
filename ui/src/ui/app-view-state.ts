@@ -130,6 +130,10 @@ export type AppViewState = {
   dreamDiaryError: string | null;
   dreamDiaryPath: string | null;
   dreamDiaryContent: string | null;
+  // Evolution Trigger state
+  evolutionTaskStatus: "idle" | "in-progress" | "complete" | "evolving" | "evolved";
+  evolutionResults: Array<{ kind: string; detail: string }>;
+  evolutionError: string | null;
   configFormMode: "form" | "raw";
   configSearchQuery: string;
   configActiveSection: string | null;

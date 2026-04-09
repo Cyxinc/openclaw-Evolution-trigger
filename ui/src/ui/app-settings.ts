@@ -18,6 +18,7 @@ import { loadCronJobs, loadCronRuns, loadCronStatus } from "./controllers/cron.t
 import { loadDebug } from "./controllers/debug.ts";
 import { loadDevices } from "./controllers/devices.ts";
 import { loadDreamDiary, loadDreamingStatus } from "./controllers/dreaming.ts";
+import { EVOLUTION_SESSION_KEY } from "./controllers/evolution.ts";
 import { loadExecApprovals } from "./controllers/exec-approvals.ts";
 import { loadLogs } from "./controllers/logs.ts";
 import { loadNodes } from "./controllers/nodes.ts";
@@ -296,7 +297,7 @@ export async function refreshActiveTab(host: SettingsHost) {
       loadDreamDiary(host as unknown as OpenClawApp),
     ]);
   }
-  if (host.tab === "chat") {
+  if (host.tab === "chat" || host.tab === "evolution") {
     await refreshChat(host as unknown as Parameters<typeof refreshChat>[0]);
     scheduleChatScroll(
       host as unknown as Parameters<typeof scheduleChatScroll>[0],
@@ -466,6 +467,18 @@ function applyTabSelection(
   // Cleanup chat module state when navigating away from chat
   if (prev === "chat" && next !== "chat") {
     resetChatViewState();
+  }
+
+  // Evolution tab: swap sessionKey to the evolution session
+  if (next === "evolution" && prev !== "evolution") {
+    (host as SettingsHost & { _savedSessionKey?: string })._savedSessionKey = host.sessionKey;
+    host.sessionKey = EVOLUTION_SESSION_KEY;
+  }
+  if (prev === "evolution" && next !== "evolution") {
+    const saved = (host as SettingsHost & { _savedSessionKey?: string })._savedSessionKey;
+    if (saved) {
+      host.sessionKey = saved;
+    }
   }
 
   if (next === "chat") {

@@ -1,0 +1,205 @@
+/* ===========================================
+   Evolution Trigger – Student Mode Chat
+   =========================================== */
+
+.evolution-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ---- Banner ---- */
+
+.evolution-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: color-mix(in oklab, var(--accent-subtle) 60%, var(--bg));
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.evolution-banner__icon {
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+}
+
+.evolution-banner__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.evolution-banner__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.evolution-banner__text strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.evolution-banner__text span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.evolution-banner__status {
+  flex-shrink: 0;
+}
+
+/* ---- Status badge ---- */
+
+.evolution-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.evolution-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.5;
+}
+
+.evolution-status--in-progress::before {
+  background: var(--accent);
+  opacity: 1;
+}
+
+.evolution-status--in-progress {
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 20%, var(--border));
+}
+
+.evolution-status--complete::before {
+  background: var(--ok);
+  opacity: 1;
+}
+
+.evolution-status--complete {
+  color: var(--ok);
+  border-color: color-mix(in oklab, var(--ok) 20%, var(--border));
+}
+
+.evolution-status--evolving::before {
+  background: var(--accent);
+  opacity: 1;
+  animation: evo-pulse 1.5s ease-in-out infinite;
+}
+
+.evolution-status--evolving {
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 30%, var(--border));
+}
+
+.evolution-status--evolved::before {
+  background: var(--ok);
+  opacity: 1;
+}
+
+.evolution-status--evolved {
+  color: var(--ok);
+  border-color: color-mix(in oklab, var(--ok) 30%, var(--border));
+}
+
+@keyframes evo-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ---- Action bar ---- */
+
+.evolution-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.evolution-error {
+  font-size: 12px;
+  color: var(--danger);
+  margin-left: 8px;
+}
+
+/* ---- Results ---- */
+
+.evolution-results {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: color-mix(in oklab, var(--ok) 3%, var(--bg));
+}
+
+.evolution-results__title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.evolution-results__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.evolution-results__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.evolution-results__icon {
+  display: flex;
+  align-items: center;
+  color: var(--ok);
+}
+
+.evolution-results__icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.evolution-results__kind {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.evolution-results__detail {
+  color: var(--muted);
+}
+
+/* ---- Chat wrapper ---- */
+
+.evolution-chat-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}

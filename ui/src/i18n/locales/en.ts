@@ -164,6 +164,7 @@ export const en: TranslationMap = {
     debug: "Debug",
     logs: "Logs",
     dreams: "Dreaming",
+    evolution: "Evolution",
   },
   subtitles: {
     agents: "Workspaces, tools, identities.",
@@ -185,6 +186,7 @@ export const en: TranslationMap = {
     debug: "Snapshots, events, RPC.",
     logs: "Live gateway logs.",
     dreams: "Memory dreaming, consolidation, and reflection.",
+    evolution: "Teach the agent, evolve skills and memory.",
   },
   overview: {
     access: {
@@ -343,6 +345,42 @@ export const en: TranslationMap = {
       nurturingInsights: "nurturing fledgling insights…",
       simmeringIdeas: "simmering half-formed ideas…",
       whisperingVectorStore: "whispering to the vector store…",
+    },
+  },
+  evolution: {
+    banner: {
+      title: "Student Mode",
+      subtitle: "You are the teacher. Guide the agent through a task, then trigger evolution.",
+    },
+    chat: {
+      placeholder: "Instruct the agent as a teacher…",
+      emptyTitle: "Student Mode",
+      emptyHint: "The agent acts as a student. Give it a task and guide it through completion.",
+    },
+    actions: {
+      title: "Evolution Actions",
+      evolve: "Evolve",
+      evolving: "Evolving…",
+      generateSkill: "Generate New Skill",
+      optimizeSkills: "Optimize Skills",
+      storeMemory: "Store Memory",
+      markComplete: "Mark Task Complete",
+      noTask: "Complete a task first to trigger evolution.",
+      newTask: "New Task",
+    },
+    status: {
+      idle: "Waiting for task",
+      inProgress: "Task in progress",
+      complete: "Task complete — ready to evolve",
+      evolving: "Evolving…",
+      evolved: "Evolution complete",
+    },
+    results: {
+      title: "Evolution Results",
+      skillGenerated: "New skill generated",
+      skillOptimized: "Skill optimized",
+      memoryStored: "Memory stored",
+      noResults: "No evolution results yet.",
     },
   },
   usage: {
