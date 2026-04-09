@@ -170,24 +170,6 @@ const lazySkills = createLazy(() => import("./views/skills.ts"));
 const lazyDreamingView = createLazy(() => import("./views/dreaming.ts"));
 const lazyEvolutionView = createLazy(() => import("./views/evolution.ts"));
 
-function resolveConfiguredDreaming(configValue: Record<string, unknown> | null): {
-  enabled: boolean;
-} {
-  if (!configValue) {
-    return {
-      enabled: false,
-    };
-  }
-  const plugins = configValue.plugins as Record<string, unknown> | undefined;
-  const entries = plugins?.entries as Record<string, unknown> | undefined;
-  const memoryCore = entries?.["memory-core"] as Record<string, unknown> | undefined;
-  const config = memoryCore?.config as Record<string, unknown> | undefined;
-  const dreaming = config?.dreaming as Record<string, unknown> | undefined;
-  return {
-    enabled: typeof dreaming?.enabled === "boolean" ? dreaming.enabled : false,
-  };
-}
-
 function formatDreamNextCycle(nextRunAtMs: number | undefined): string | null {
   if (typeof nextRunAtMs !== "number" || !Number.isFinite(nextRunAtMs)) {
     return null;
